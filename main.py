@@ -1,7 +1,6 @@
 # Sources:
 # https://fastapi.tiangolo.com
 # https://magicstack.github.io/asyncpg/current/index.html
-import sys
 
 from fastapi import FastAPI, HTTPException
 import asyncpg
