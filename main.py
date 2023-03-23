@@ -15,7 +15,20 @@ print("POST: http://localhost:9000/hello/name  name=ic20b050")
 print("")
 print("GET: http://localhost:9000/getGemeinde?id=10101")
 
-conn = None
+pool = None
+
+
+async def createPool():
+    user = "postgres"
+    password = "xsmmsgbAMfIOIWPPBrsc"
+    #host = "127.0.0.1"
+    host = "192.168.0.2"  # container ip
+    port = "5432"
+    database = "ogd"
+
+    global pool
+    #pool = await asyncpg.create_pool(user='postgres', host='127.0.0.1')
+    pool = await asyncpg.create_pool(f'postgresql://{user}:{password}@{host}:{port}/{database}')
 
 @app.get("/")
 async def root():
@@ -35,21 +48,12 @@ async def create_item(name: str):
 @app.get("/getGemeinde")
 async def say_hello(id: int):
     try:
-        global conn
+        if pool is None:
+            await createPool()
 
-        if conn is None:
-            user = "postgres"
-            password = "xsmmsgbAMfIOIWPPBrsc"
-            # host = "127.0.0.1"
-            host = "192.168.0.2"  # container ip
-            port = "5432"
-            database = "ogd"
-            conn = await asyncpg.connect(f'postgresql://{user}:{password}@{host}:{port}/{database}')
-
-        row = await conn.fetchrow(
-            'SELECT gemeindename FROM public.gemeinde WHERE gkz=$1 LIMIT 1', id)
-        # await conn.close()
+        async with pool.acquire() as con:
+            row = await con.fetchrow(
+                'SELECT gemeindename FROM public.gemeinde WHERE gkz=$1 LIMIT 1', id)
+            return {"gemeindename": row}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-    return {"gemeindename": row}
