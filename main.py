@@ -40,8 +40,8 @@ async def say_hello(id: int):
         if conn is None:
             user = "postgres"
             password = "xsmmsgbAMfIOIWPPBrsc"
-            host = "127.0.0.1"
-            # host = "192.168.0.2"  # container ip
+            # host = "127.0.0.1"
+            host = "192.168.0.2"  # container ip
             port = "5432"
             database = "ogd"
             conn = await asyncpg.connect(f'postgresql://{user}:{password}@{host}:{port}/{database}')
