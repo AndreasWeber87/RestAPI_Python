@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS public.strasse
     strassenname character varying(100) COLLATE pg_catalog."default",
     CONSTRAINT strasse_pkey PRIMARY KEY (skz)
 )""")
-            return ""
+            return {"message": "Table created successfully."}
     except Exception:
         traceback.print_exc()
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -87,7 +87,7 @@ async def addStrasse(strasse: JsonStrasse, response: Response):
         async with pool.acquire() as con:
             await con.execute(
                 "INSERT INTO public.strasse(skz, strassenname) VALUES ($1, $2);", strasse.skz, strasse.strassenname)
-            return ""
+            return {"message": "Street added successfully."}
     except Exception:
         traceback.print_exc()
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -102,7 +102,7 @@ async def changeStrasse(skz: int, strasse: JsonStrasse, response: Response):
         async with pool.acquire() as con:
             await con.execute(
                 "UPDATE public.strasse SET strassenname=$1 WHERE skz=$2;", strasse.strassenname, skz)
-            return ""
+            return {"message": "Street changed successfully."}
     except Exception:
         traceback.print_exc()
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -117,7 +117,7 @@ async def getStrasse(skz: int, response: Response):
                 "SELECT strassenname FROM public.strasse WHERE skz=$1 LIMIT 1;", skz)
             if name is None:
                 response.status_code = status.HTTP_404_NOT_FOUND
-                return ""
+                return {"message": "No street found."}
 
             return {"skz": skz, "strassenname": name}
     except Exception:
@@ -132,7 +132,7 @@ async def deleteStrasse(skz: int, response: Response):
         async with pool.acquire() as con:
             await con.execute(
                 "DELETE FROM public.strasse WHERE skz=$1;", skz)
-            return ""
+            return {"message": "Street deleted successfully."}
     except Exception:
         traceback.print_exc()
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
