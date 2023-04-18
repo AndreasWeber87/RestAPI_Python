@@ -18,24 +18,24 @@ print("")
 print("POST: http://localhost:9000/createTable")
 print("	BODY:")
 print("")
-print("POST: http://localhost:9000/addStrasse")
+print("POST: http://localhost:9000/addStreet")
 print(" HEADER: Content-Type: application/json")
-print("	BODY: {\"skz\":108711,\"strassenname\":\"Andromedastraße\"}")
+print("	BODY: {\"skz\":108711,\"streetname\":\"Andromedastraße\"}")
 print("")
-print("PUT: http://localhost:9000/changeStrasse/108711")
+print("PUT: http://localhost:9000/changeStreet/108711")
 print("	HEADER: Content-Type: application/json")
-print("	BODY: {\"strassenname\":\"Andromedastraße2\"}")
+print("	BODY: {\"streetname\":\"Andromedastraße2\"}")
 print("")
-print("GET: http://localhost:9000/getStrasse?skz=108711")
+print("GET: http://localhost:9000/getStreet?skz=108711")
 print("")
-print("DELETE: http://localhost:9000/deleteStrasse/108711")
+print("DELETE: http://localhost:9000/deleteStreet/108711")
 
 pool = None
 
 
-class JsonStrasse(BaseModel):
+class JsonStreet(BaseModel):
     skz: int | None = None  # optional parameter
-    strassenname: str
+    streetname: str
 
 
 @app.on_event("startup")
@@ -78,39 +78,39 @@ CREATE TABLE IF NOT EXISTS public.strasse
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
-# POST: http://localhost:9000/addStrasse
+# POST: http://localhost:9000/addStreet
 # HEADER: Content-Type: application/json
-# BODY: {"skz":108711,"strassenname":"Andromedastraße"}
-@app.post("/addStrasse", status_code=status.HTTP_201_CREATED)
-async def addStrasse(strasse: JsonStrasse, response: Response):
+# BODY: {"skz":108711,"streetname":"Andromedastraße"}
+@app.post("/addStreet", status_code=status.HTTP_201_CREATED)
+async def addStreet(street: JsonStreet, response: Response):
     try:
         async with pool.acquire() as con:
             await con.execute(
-                "INSERT INTO public.strasse(skz, strassenname) VALUES ($1, $2);", strasse.skz, strasse.strassenname)
+                "INSERT INTO public.strasse(skz, strassenname) VALUES ($1, $2);", street.skz, street.streetname)
             return {"message": "Street added successfully."}
     except Exception:
         traceback.print_exc()
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
-# PUT: http://localhost:9000/changeStrasse/108711
+# PUT: http://localhost:9000/changeStreet/108711
 # HEADER: Content-Type: application/json
-# BODY: {"strassenname":"Andromedastraße2"}
-@app.put("/changeStrasse/{skz}")
-async def changeStrasse(skz: int, strasse: JsonStrasse, response: Response):
+# BODY: {"streetname":"Andromedastraße2"}
+@app.put("/changeStreet/{skz}")
+async def changeStreet(skz: int, street: JsonStreet, response: Response):
     try:
         async with pool.acquire() as con:
             await con.execute(
-                "UPDATE public.strasse SET strassenname=$1 WHERE skz=$2;", strasse.strassenname, skz)
+                "UPDATE public.strasse SET strassenname=$1 WHERE skz=$2;", street.streetname, skz)
             return {"message": "Street changed successfully."}
     except Exception:
         traceback.print_exc()
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
-# GET: http://localhost:9000/getStrasse?skz=108711
-@app.get("/getStrasse")
-async def getStrasse(skz: int, response: Response):
+# GET: http://localhost:9000/getStreet?skz=108711
+@app.get("/getStreet")
+async def getStreet(skz: int, response: Response):
     try:
         async with pool.acquire() as con:
             name = await con.fetchval(
@@ -119,15 +119,15 @@ async def getStrasse(skz: int, response: Response):
                 response.status_code = status.HTTP_404_NOT_FOUND
                 return {"message": "No street found."}
 
-            return {"skz": skz, "strassenname": name}
+            return {"skz": skz, "streetname": name}
     except Exception:
         traceback.print_exc()
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
-# DELETE: http://localhost:9000/deleteStrasse/108711
-@app.delete("/deleteStrasse/{skz}")
-async def deleteStrasse(skz: int, response: Response):
+# DELETE: http://localhost:9000/deleteStreet/108711
+@app.delete("/deleteStreet/{skz}")
+async def deleteStreet(skz: int, response: Response):
     try:
         async with pool.acquire() as con:
             await con.execute(
