@@ -1,4 +1,4 @@
-FROM python:3.11.2-slim-buster
+FROM python:3.11.3-slim-buster
 # Alpine Fehlermeldung: Cargo, the Rust package manager, is not installed
 
 # Workdir innerhalb des Containers festlegen
