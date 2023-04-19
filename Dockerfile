@@ -1,15 +1,15 @@
 FROM python:3.11.3-slim-buster
-# Alpine Fehlermeldung: Cargo, the Rust package manager, is not installed
+# Error in Alpine-Image: Cargo, the Rust package manager, is not installed -> that's why i use the slim-buster image
 
-# Workdir innerhalb des Containers festlegen
+# set Workdir inside the image
 WORKDIR /home/ic20b050/app
-# Kopiert das aktuelle Verzeichnis vom Host in das Image Verzeichnis
+# copy the current dir from the host in the image dir
 ADD . /home/ic20b050/app
 
-# installiert die Libraries
+# install the libs from requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# gibt den Port 9000 frei
+# release the port to the host
 EXPOSE 9000
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "9000"]
