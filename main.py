@@ -42,8 +42,7 @@ class JsonStreet(BaseModel):
 async def createPool():
     user = "postgres"
     password = "xsmmsgbAMfIOIWPPBrsc"
-    #host = "127.0.0.1"
-    host = "192.168.0.2"  # container ip
+    host = "192.168.0.2"
     port = "5432"
     database = "ogd"
 
@@ -66,7 +65,7 @@ async def createTable(response: Response):
             await con.execute(
                 """DROP TABLE IF EXISTS public.strasse;
 
-CREATE TABLE IF NOT EXISTS public.strasse
+CREATE TABLE public.strasse
 (
     skz integer NOT NULL,
     strassenname character varying(100) COLLATE pg_catalog."default",
@@ -116,7 +115,6 @@ async def getStreet(skz: int, response: Response):
             name = await con.fetchval(
                 "SELECT strassenname FROM public.strasse WHERE skz=$1 LIMIT 1;", skz)
             if name is None:
-                response.status_code = status.HTTP_404_NOT_FOUND
                 return {"message": "No street found."}
 
             return {"skz": skz, "streetname": name}
