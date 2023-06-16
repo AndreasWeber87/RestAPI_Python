@@ -99,8 +99,10 @@ async def addStreet(street: JsonStreet, response: Response):
 async def changeStreet(skz: int, street: JsonStreet, response: Response):
     try:
         async with pool.acquire() as con:
-            await con.execute(
+            res = await con.execute(
                 "UPDATE public.strasse SET strassenname=$1 WHERE skz=$2;", street.streetname, skz)
+            if res == "UPDATE 0":
+                return {"message": "ID not found."}
             return {"message": "Street changed successfully."}
     except Exception:
         traceback.print_exc()
