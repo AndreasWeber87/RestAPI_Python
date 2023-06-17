@@ -117,7 +117,7 @@ async def getStreet(skz: int, response: Response):
             name = await con.fetchval(
                 "SELECT strassenname FROM public.strasse WHERE skz=$1 LIMIT 1;", skz)
             if name is None:
-                return {"message": "No street found."}
+                return {"message": "ID not found."}
 
             return {"skz": skz, "streetname": name}
     except Exception:
