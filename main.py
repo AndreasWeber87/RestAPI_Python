@@ -130,8 +130,10 @@ async def getStreet(skz: int, response: Response):
 async def deleteStreet(skz: int, response: Response):
     try:
         async with pool.acquire() as con:
-            await con.execute(
+            res = await con.execute(
                 "DELETE FROM public.strasse WHERE skz=$1;", skz)
+            if res == "DELETE 0":
+                return {"message": "ID not found."}
             return {"message": "Street deleted successfully."}
     except Exception:
         traceback.print_exc()
