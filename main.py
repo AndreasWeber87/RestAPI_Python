@@ -44,7 +44,7 @@ async def createPool():
     password = "xsmmsgbAMfIOIWPPBrsc"
     host = "192.168.0.2"
     port = "5432"
-    database = "ogd"
+    database = "OGD"
 
     global pool
     pool = await asyncpg.create_pool(f'postgresql://{user}:{password}@{host}:{port}/{database}')
