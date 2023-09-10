@@ -1,0 +1,4 @@
+This is a simple REST API developed with Python as part of my bachelor thesis. A PostgreSQL database in a Docker container was used to manage the data. The web framework used was [fastapi](https://pypi.org/project/fastapi/) and the database framework used was [asyncpg](https://pypi.org/project/asyncpg/).
+The API provides interfaces for creating, reading, modifying, and deleting (CRUD) data.
+
+In my bachelor thesis the performance is measured with the application [RestAPI_PerformanceTest](https://github.com/AndreasWeber87/RestAPI_PerformanceTest) and compared with the REST APIs in the languages [Go](https://github.com/AndreasWeber87/RestAPI_Go) and [Node.js](https://github.com/AndreasWeber87/RestAPI_NodeJS). The software [ProcessDockerStats](https://github.com/AndreasWeber87/ProcessDockerStats) was then used to evaluate the measurement results.
